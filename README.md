@@ -2,6 +2,9 @@
 
 A modern **React** dashboard for managing your job applications, featuring **drag & drop columns**, responsive layout, and a professional UI with **Tailwind CSS**. Built for candidates to track job offers, statuses, and details efficiently.
 
+# Demo
+https://job-application-helper-frontend.vercel.app/
+
 ---
 
 ## Installation
