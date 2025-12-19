@@ -60,15 +60,7 @@ export default function OfferDetails({userId, offer, onClose}) {
                         className="font-bold">{offer.salary.expected}</span>, Offered <span
                         className="font-bold">{offer.salary.offered}</span></p>
 
-                    <div className="grid md:grid-cols-3 gap-4">
-                        <section className="bg-gray-50 p-4 rounded-xl shadow-inner">
-                            <h3 className="font-semibold mb-2">Statuses</h3>
-                            {statuses.length ? (
-                                statuses.map(s => <p key={s.id}
-                                                     className="text-gray-700 text-sm mb-1">{s.date}: {s.status}</p>)
-                            ) : <p className="text-gray-400">No statuses yet</p>}
-                        </section>
-
+                    <div className="grid md:grid-cols-2 gap-4">
                         <section className="bg-gray-50 p-4 rounded-xl shadow-inner">
                             <h3 className="font-semibold mb-2">Notes</h3>
                             {notes.length ? (
