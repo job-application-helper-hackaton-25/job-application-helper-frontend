@@ -1,0 +1,29 @@
+[
+  {
+    "id": "todo-001",
+    "userId": "123",
+    "offerId": "1",
+    "content": "Prepare CV tailored for this position",
+    "deadline": "2025-01-10",
+    "priority": "HIGH",
+    "completed": true
+  },
+  {
+    "id": "todo-002",
+    "userId": "123",
+    "offerId": "1",
+    "content": "Send follow-up email to recruiter",
+    "deadline": "2025-12-15",
+    "priority": "MEDIUM",
+    "completed": false
+  },
+  {
+    "id": "todo-003",
+    "userId": "123",
+    "offerId": "1",
+    "content": "Review technical interview questions",
+    "deadline": "2026-01-18",
+    "priority": "LOW",
+    "completed": false
+  }
+]

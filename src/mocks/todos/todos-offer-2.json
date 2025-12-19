@@ -1,0 +1,47 @@
+[
+  {
+    "id": "todo-101",
+    "userId": "123",
+    "offerId": "2",
+    "content": "Analyze job requirements and highlight matching skills",
+    "deadline": "2025-11-02",
+    "priority": "HIGH",
+    "completed": true
+  },
+  {
+    "id": "todo-102",
+    "userId": "123",
+    "offerId": "2",
+    "content": "Update LinkedIn profile with recent projects",
+    "deadline": "2026-11-12",
+    "priority": "MEDIUM",
+    "completed": true
+  },
+  {
+    "id": "todo-103",
+    "userId": "123",
+    "offerId": "2",
+    "content": "Prepare questions for HR interview",
+    "deadline": "2026-11-18",
+    "priority": "LOW",
+    "completed": false
+  },
+  {
+    "id": "todo-104",
+    "userId": "123",
+    "offerId": "2",
+    "content": "Set up reminder to check application status",
+    "deadline": "2026-12-01",
+    "priority": "LOW",
+    "completed": false
+  },
+  {
+    "id": "todo-102",
+    "userId": "123",
+    "offerId": "2",
+    "content": "Prepare short self-introduction for recruiter call",
+    "deadline": "2026-11-07",
+    "priority": "HIGH",
+    "completed": true
+  }
+]

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getOfferStatuses, getOfferNotes, getOfferTodos} from "../api/offersApi-real";
+import {getOfferStatuses, getOfferNotes, getOfferTodos} from "../api/offersApi.js";
 import TodoItem from "./TodoItem";
 import {motion, AnimatePresence} from "framer-motion";
 
@@ -33,7 +33,7 @@ export default function OfferDetails({userId, offer, onClose}) {
                     animate={{scale: 1, opacity: 1}}
                     exit={{scale: 0.95, opacity: 0}}
                     transition={{duration: 0.2}}
-                    className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 relative"
+                    className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-y-auto p-6 relative"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <button
