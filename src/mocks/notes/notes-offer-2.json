@@ -38,5 +38,85 @@
     "stage": "Decision",
     "content": "Scheduled call with mentor to discuss pros and cons.",
     "date": "2025-11-12"
+  },
+  {
+    "id": "note-201",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "Applied",
+    "content": "Uploaded CV and portfolio on company portal.",
+    "date": "2025-10-20"
+  },
+  {
+    "id": "note-202",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "HR Interview",
+    "content": "Had an in-depth phone call with HR to discuss the overall compensation package, including base salary, bonus structure, and stock options. Reviewed the company benefits, such as health insurance, vacation policy, and remote work flexibility. Clarified the expected work hours and onboarding process. HR also provided insights into the company culture, team structure, and upcoming projects I might be involved in. Discussed potential career growth opportunities and training programs. Agreed on the next steps, including a follow-up email and scheduling the technical interview with the team lead.",
+    "date": "2025-10-25"
+  },
+  {
+    "id": "note-203",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "Technical Interview",
+    "content": "Completed coding assignment and submitted via email.",
+    "date": "2025-11-01"
+  },
+  {
+    "id": "note-204",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "Offer",
+    "content": "Received email with initial offer details, reviewing contract.",
+    "date": "2025-11-08"
+  },
+  {
+    "id": "note-205",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "Decision",
+    "content": "Scheduled call with mentor to discuss pros and cons.",
+    "date": "2025-11-12"
+  },
+  {
+    "id": "note-201",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "Applied",
+    "content": "Uploaded CV and portfolio on company portal.",
+    "date": "2025-10-20"
+  },
+  {
+    "id": "note-202",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "HR Interview",
+    "content": "Had an in-depth phone call with HR to discuss the overall compensation package, including base salary, bonus structure, and stock options. Reviewed the company benefits, such as health insurance, vacation policy, and remote work flexibility. Clarified the expected work hours and onboarding process. HR also provided insights into the company culture, team structure, and upcoming projects I might be involved in. Discussed potential career growth opportunities and training programs. Agreed on the next steps, including a follow-up email and scheduling the technical interview with the team lead.",
+    "date": "2025-10-25"
+  },
+  {
+    "id": "note-203",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "Technical Interview",
+    "content": "Completed coding assignment and submitted via email.",
+    "date": "2025-11-01"
+  },
+  {
+    "id": "note-204",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "Offer",
+    "content": "Received email with initial offer details, reviewing contract.",
+    "date": "2025-11-08"
+  },
+  {
+    "id": "note-205",
+    "userId": "123",
+    "offerId": "2",
+    "stage": "Decision",
+    "content": "Scheduled call with mentor to discuss pros and cons.",
+    "date": "2025-11-12"
   }
 ]

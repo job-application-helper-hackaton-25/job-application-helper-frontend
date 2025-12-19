@@ -62,19 +62,23 @@ export default function OfferDetails({userId, offer, onClose}) {
                         className="font-bold">{offer.salary.offered}</span></p>
 
                     <div className="grid md:grid-cols-2 gap-4">
-                        <section className="bg-gray-50 p-4 rounded-xl shadow-inner">
+                        <section className="bg-gray-50 p-4 rounded-xl shadow-inner flex flex-col">
                             <h3 className="font-semibold mb-2">Notes</h3>
-                            {notes.length ? (
-                                notes.map(n => <NoteItem key={n.id} note={n} />)
-                            ) : (
-                                <p className="text-gray-400">No notes yet</p>
-                            )}
+                            <div className="overflow-y-auto max-h-[60vh] scrollbar-thin pr-2">
+                                {notes.length ? (
+                                    notes.map(n => <NoteItem key={n.id} note={n} />)
+                                ) : (
+                                    <p className="text-gray-400">No notes yet</p>
+                                )}
+                            </div>
                         </section>
 
-                        <section className="bg-gray-50 p-4 rounded-xl shadow-inner">
+                        <section className="bg-gray-50 p-4 rounded-xl shadow-inner flex flex-col">
                             <h3 className="font-semibold mb-2">Todos</h3>
-                            {todos.length ? todos.map(t => <TodoItem key={t.id} todo={t}/>) :
-                                <p className="text-gray-400">No todos yet</p>}
+                            <div className="overflow-y-auto max-h-[60vh] scrollbar-thin pr-2">
+                                {todos.length ? todos.map(t => <TodoItem key={t.id} todo={t}/>) :
+                                    <p className="text-gray-400">No todos yet</p>}
+                            </div>
                         </section>
                     </div>
                 </motion.div>
