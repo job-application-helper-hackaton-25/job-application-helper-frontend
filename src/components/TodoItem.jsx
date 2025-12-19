@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 export default function TodoItem({todo}) {
     const isOverdue =
-        !todo.completed && new Date(todo.deadline) < new Date();
+        todo.deadline != null && !todo.completed && new Date(todo.deadline) < new Date();
 
     const priorityStyles = {
         HIGH: "bg-red-100 text-red-700",
@@ -39,15 +39,17 @@ export default function TodoItem({todo}) {
                     {todo.content}
                 </p>
 
-                <p
-                    className={clsx(
-                        "text-xs",
-                        isOverdue ? "text-red-500" : "text-gray-500"
-                    )}
-                >
-                    Deadline: {todo.deadline}
-                    {isOverdue && " • overdue"}
-                </p>
+                {todo.deadline && (
+                    <p
+                        className={clsx(
+                            "text-xs",
+                            isOverdue ? "text-red-500" : "text-gray-500"
+                        )}
+                    >
+                        Deadline: {todo.deadline}
+                        {isOverdue && " • overdue"}
+                    </p>
+                )}
             </div>
 
             <span

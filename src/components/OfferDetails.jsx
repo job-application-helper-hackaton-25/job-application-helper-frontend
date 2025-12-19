@@ -3,6 +3,9 @@ import {getOfferStatuses, getOfferNotes, getOfferTodos} from "../api/offersApi.j
 import TodoItem from "./TodoItem";
 import {motion, AnimatePresence} from "framer-motion";
 import NoteItem from "./NoteItem.jsx";
+import {NOTE_STAGE_COLORS} from "../constants/stageColors.jsx";
+import NewNoteInput from "./NewNoteInput.jsx";
+import NewTodoItem from "./NewTodoItem.jsx";
 
 export default function OfferDetails({userId, offer, onClose}) {
     const [statuses, setStatuses] = useState([]);
@@ -16,6 +19,10 @@ export default function OfferDetails({userId, offer, onClose}) {
         getOfferNotes(userId, offer.id).then(setNotes);
         getOfferTodos(userId, offer.id).then(setTodos);
     }, [userId, offer]);
+
+    const handleAddTodo = (newTodo) => {
+        setTodos((prevTodos) => [newTodo, ...prevTodos]);
+    };
 
     if (!offer) return null;
 
@@ -64,7 +71,22 @@ export default function OfferDetails({userId, offer, onClose}) {
                     <div className="grid md:grid-cols-2 gap-4">
                         <section className="bg-gray-50 p-4 rounded-xl shadow-inner flex flex-col">
                             <h3 className="font-semibold mb-2">Notes</h3>
-                            <div className="overflow-y-auto max-h-[60vh] scrollbar-thin pr-2">
+                            <div className="overflow-y-auto max-h-[60vh] scrollbar-thin pr-2 flex flex-col gap-2">
+                                <NewNoteInput
+                                    offerStatus={offer.status}
+                                    onAdd={(newContent) => {
+                                        const newNote = {
+                                            id: `note-${Date.now()}`,
+                                            userId,
+                                            offerId: offer.id,
+                                            stage: offer.status,
+                                            content: newContent,
+                                            date: new Date().toISOString().split("T")[0],
+                                        };
+                                        setNotes([newNote, ...notes]);
+                                    }}
+                                />
+
                                 {notes.length ? (
                                     notes.map(n => <NoteItem key={n.id} note={n} />)
                                 ) : (
@@ -76,6 +98,8 @@ export default function OfferDetails({userId, offer, onClose}) {
                         <section className="bg-gray-50 p-4 rounded-xl shadow-inner flex flex-col">
                             <h3 className="font-semibold mb-2">Todos</h3>
                             <div className="overflow-y-auto max-h-[60vh] scrollbar-thin pr-2">
+                                <NewTodoItem onAdd={handleAddTodo} />
+
                                 {todos.length ? todos.map(t => <TodoItem key={t.id} todo={t}/>) :
                                     <p className="text-gray-400">No todos yet</p>}
                             </div>
