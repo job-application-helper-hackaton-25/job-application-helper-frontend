@@ -9,9 +9,6 @@ export const getOffers = (userId) =>
         }, 1);
     });
 
-export const getOfferDetails = (userId, offerId) =>
-    axios.get(`${API_BASE}/${userId}/offers/${offerId}`).then(res => res.data);
-
 export const getOfferStatuses = (userId, offerId) =>
     axios.get(`${API_BASE}/${userId}/offers/${offerId}/statuses`).then(res => res.data);
 

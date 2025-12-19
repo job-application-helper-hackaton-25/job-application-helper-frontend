@@ -1,9 +1,23 @@
-import React, {useEffect, useState} from "react";
+import React, {useState, useEffect} from "react";
 import {getOffers} from "../api/offersApi";
 import OfferCard from "../components/OfferCard";
-import Header from "../components/Header";
 import OfferDetails from "../components/OfferDetails";
-import {DragDropContext, Droppable, Draggable} from "@hello-pangea/dnd";
+import Header from "../components/Header";
+
+import {
+    DndContext,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    closestCenter,
+} from "@dnd-kit/core";
+import {
+    SortableContext,
+    arrayMove,
+    horizontalListSortingStrategy,
+    useSortable,
+} from "@dnd-kit/sortable";
+import {CSS} from "@dnd-kit/utilities";
 
 const STATUS_COLUMNS = [
     "Saved",
@@ -11,77 +25,103 @@ const STATUS_COLUMNS = [
     "HR Interview",
     "Technical Interview",
     "Offer",
-    "Decision"
+    "Decision",
 ];
 
 export default function Dashboard() {
     const userId = "123";
     const [offers, setOffers] = useState([]);
-    const [selectedOfferId, setSelectedOfferId] = useState(null);
+    const [selectedOffer, setSelectedOffer] = useState(null);
+
+    function SortableOffer({offer}) {
+        const {attributes, listeners, setNodeRef, transform, transition} =
+            useSortable({id: offer.id});
+
+        const style = {
+            transform: CSS.Transform.toString(transform),
+            transition,
+        };
+
+        return (
+            <div
+                ref={setNodeRef}
+                style={style}
+                {...attributes}
+                {...listeners}
+                className="bg-white p-4 rounded-lg shadow cursor-pointer flex items-center justify-center h-32 text-gray-900 mb-2"
+                onClick={() => {
+                    setSelectedOffer(offer);
+                }}>
+                <OfferCard offer={offer}/>
+            </div>
+        );
+    }
 
     useEffect(() => {
         getOffers(userId).then(setOffers);
     }, []);
 
-    const onDragEnd = (result) => {
-        const {destination, draggableId} = result;
-        if (!destination) return;
+    const sensors = useSensors(
+        useSensor(PointerSensor, {activationConstraint: {distance: 15}})
+    );
 
-        setOffers(prev =>
-            prev.map(o =>
-                o.id === draggableId ? {...o, status: destination.droppableId} : o
-            )
-        );
+    const onDragEnd = (event) => {
+        const {active, over} = event;
+        if (!over) return;
+
+        if (active.id !== over.id) {
+            setOffers((prev) => {
+                const oldIndex = prev.findIndex((o) => o.id === active.id);
+                const newIndex = prev.findIndex((o) => o.id === over.id);
+                return arrayMove(prev, oldIndex, newIndex);
+            });
+        }
     };
 
     return (
         <div className="h-screen w-screen flex flex-col">
             <Header/>
-            <div className="flex-1 overflow-x-auto p-4">
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <div className="flex flex-row gap-4 h-full">
-                        {STATUS_COLUMNS.map(status => (
-                            <Droppable droppableId={status} key={status}>
-                                {(provided) => (
-                                    <div
-                                        {...provided.droppableProps}
-                                        ref={provided.innerRef}
-                                        className="flex-shrink-0 flex-1 bg-gray-100 shadow p-2 rounded-lg flex flex-col h-full"
-                                    >
-                                        <h2 className="text-lg font-semibold mb-2 text-gray-800">{status}</h2>
-                                        <div className="flex flex-col gap-2 flex-1 overflow-y-auto">
-                                            {offers
-                                                .filter(o => o.status === status)
-                                                .map((offer, index) => (
-                                                    <Draggable key={offer.id} draggableId={offer.id} index={index}>
-                                                        {(provided) => (
-                                                            <div
-                                                                {...provided.draggableProps}
-                                                                {...provided.dragHandleProps}
-                                                                ref={provided.innerRef}
-                                                                className="bg-white p-4 rounded-lg shadow cursor-pointer flex items-center justify-center h-32 text-gray-900"
-                                                                onClick={() => setSelectedOfferId(offer.id)}
-                                                            >
-                                                                <OfferCard offer={offer}/>
-                                                            </div>
-                                                        )}
-                                                    </Draggable>
-                                                ))}
-                                            {provided.placeholder}
-                                        </div>
-                                    </div>
-                                )}
-                            </Droppable>
-                        ))}
+
+            <div className="flex-1 overflow-x-auto p-4 flex gap-4">
+                {STATUS_COLUMNS.map((status) => (
+                    <div
+                        key={status}
+                        className="flex-shrink-0 flex-1 bg-gray-100 shadow p-2 rounded-lg flex flex-col h-full"
+                    >
+                        <h2 className="text-lg font-semibold mb-2 text-gray-800">{status}</h2>
+
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragEnd={onDragEnd}
+                        >
+                            <SortableContext
+                                items={offers.filter((o) => o.status === status).map((o) => o.id)}
+                                strategy={horizontalListSortingStrategy}
+                            >
+                                <div className="flex flex-col gap-2">
+                                    {offers
+                                        .filter((o) => o.status === status)
+                                        .map((offer) => (
+                                            <SortableOffer
+                                                key={offer.id}
+                                                offer={offer}
+                                            />
+                                        ))}
+                                </div>
+                            </SortableContext>
+                        </DndContext>
                     </div>
-                </DragDropContext>
+                ))}
             </div>
 
-            {selectedOfferId && (
+            {selectedOffer && (
                 <OfferDetails
                     userId={userId}
-                    offerId={selectedOfferId}
-                    onClose={() => setSelectedOfferId(null)}
+                    offer={selectedOffer}
+                    onClose={() => {
+                        setSelectedOffer(null)
+                    }}
                 />
             )}
         </div>
