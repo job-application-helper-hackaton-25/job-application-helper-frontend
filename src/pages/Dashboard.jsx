@@ -18,6 +18,7 @@ import {
     useSortable,
 } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
+import { NOTE_STAGE_COLORS } from "../constants/stageColors.jsx";
 
 const STATUS_COLUMNS = [
     "Saved",
@@ -41,6 +42,8 @@ export default function Dashboard() {
             transform: CSS.Transform.toString(transform),
             transition,
         };
+
+        const borderColorClass = NOTE_STAGE_COLORS[offer.status] || "border-gray-300";
 
         return (
             <div
@@ -86,9 +89,10 @@ export default function Dashboard() {
                 {STATUS_COLUMNS.map((status) => (
                     <div
                         key={status}
-                        className="flex-shrink-0 flex-1 bg-gray-100 shadow p-2 rounded-lg flex flex-col h-full"
-                    >
-                        <h2 className="text-lg font-semibold mb-2 text-gray-800">{status}</h2>
+                        className={`flex-shrink-0 flex-1 bg-gray-100 shadow rounded-lg flex flex-col h-full`}>
+                        <h2 className={`text-lg text-gray-700 font-semibold mb-2 py-1 rounded-t-lg border-t-5 ${NOTE_STAGE_COLORS[status].border}`}>
+                            {status}
+                        </h2>
 
                         <DndContext
                             sensors={sensors}
@@ -99,7 +103,7 @@ export default function Dashboard() {
                                 items={offers.filter((o) => o.status === status).map((o) => o.id)}
                                 strategy={horizontalListSortingStrategy}
                             >
-                                <div className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-2 m-2">
                                     {offers
                                         .filter((o) => o.status === status)
                                         .map((offer) => (

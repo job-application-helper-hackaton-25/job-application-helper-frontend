@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {getOfferStatuses, getOfferNotes, getOfferTodos} from "../api/offersApi.js";
 import TodoItem from "./TodoItem";
 import {motion, AnimatePresence} from "framer-motion";
+import NoteItem from "./NoteItem.jsx";
 
 export default function OfferDetails({userId, offer, onClose}) {
     const [statuses, setStatuses] = useState([]);
@@ -64,9 +65,10 @@ export default function OfferDetails({userId, offer, onClose}) {
                         <section className="bg-gray-50 p-4 rounded-xl shadow-inner">
                             <h3 className="font-semibold mb-2">Notes</h3>
                             {notes.length ? (
-                                notes.map(n => <p key={n.id}
-                                                  className="text-gray-700 text-sm mb-1">{n.date} ({n.stage}): {n.content}</p>)
-                            ) : <p className="text-gray-400">No notes yet</p>}
+                                notes.map(n => <NoteItem key={n.id} note={n} />)
+                            ) : (
+                                <p className="text-gray-400">No notes yet</p>
+                            )}
                         </section>
 
                         <section className="bg-gray-50 p-4 rounded-xl shadow-inner">
