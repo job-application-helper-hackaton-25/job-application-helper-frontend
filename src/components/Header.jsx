@@ -10,7 +10,7 @@ export default function Header() {
                         J
                     </div>
                     <span className="text-xl font-semibold text-gray-900 dark:text-white tracking-wide">
-                    Job Application Helper
+                    Dream Job Application Helper
                     </span>
                 </div>
 

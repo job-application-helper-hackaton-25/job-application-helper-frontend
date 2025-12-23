@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { NOTE_STAGE_COLORS } from "../constants/stageColors.jsx";
+import { NOTE_STAGE_COLORS } from "../constants/StageColors.jsx";
 
 export default function NewNoteInput({ offerStatus, onAdd }) {
     const [content, setContent] = useState("");

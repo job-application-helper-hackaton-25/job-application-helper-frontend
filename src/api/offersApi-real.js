@@ -1,9 +1,18 @@
 import axios from "axios";
 
-const API_BASE = "https://your-api.com/users";
+const API_BASE = "http://0.0.0.0:8080/offers";
 
-export const getOffers = (userId) =>
-    axios.get(`${API_BASE}/${userId}/offers`).then(res => res.data);
+export const getOffers = () =>
+    axios.get(`${API_BASE}`).then(res => {
+        console.log(res.data);
+        return res.data;
+    });
+
+export const getOffersStatuses = () =>
+    axios.get(`${API_BASE}/statuses`).then(res => {
+        console.log(res.data);
+        return res.data;
+    });
 
 export const getOfferDetails = (userId, offerId) =>
     axios.get(`${API_BASE}/${userId}/offers/${offerId}`).then(res => res.data);

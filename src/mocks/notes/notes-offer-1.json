@@ -3,15 +3,15 @@
     "id": "note-001",
     "userId": "123",
     "offerId": "1",
-    "stage": "Saved",
+    "stage": "FOLLOWING",
     "content": "Interesting tech stack.",
     "date": "2025-11-01"
   },
   {
-    "id": "note-001",
+    "id": "note-011",
     "userId": "123",
     "offerId": "1",
-    "stage": "Applied",
+    "stage": "APPLIED",
     "content": "Sent personalized cover letter to recruiter.",
     "date": "2025-11-01"
   },
@@ -19,7 +19,7 @@
     "id": "note-002",
     "userId": "123",
     "offerId": "1",
-    "stage": "HR Interview",
+    "stage": "INTERVIEW_STAGE",
     "content": "HR interview scheduled for next Monday.",
     "date": "2025-11-05"
   },
@@ -27,7 +27,7 @@
     "id": "note-003",
     "userId": "123",
     "offerId": "1",
-    "stage": "Technical Interview",
+    "stage": "WAITING_FOR_FEEDBACK",
     "content": "Reviewed coding challenges and data structures.",
     "date": "2025-11-10"
   },
@@ -35,7 +35,7 @@
     "id": "note-004",
     "userId": "123",
     "offerId": "1",
-    "stage": "Offer",
+    "stage": "OFFER_RECEIVED",
     "content": "Received verbal offer, waiting for official email.",
     "date": "2025-11-15"
   },
@@ -43,7 +43,7 @@
     "id": "note-005",
     "userId": "123",
     "offerId": "1",
-    "stage": "Decision",
+    "stage": "REJECTED",
     "content": "Discussed offer details with mentor and family.",
     "date": "2025-11-18"
   }

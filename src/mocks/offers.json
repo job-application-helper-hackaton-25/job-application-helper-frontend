@@ -1,34 +1,15 @@
 [
   {
-    "id": "1",
-    "userId": "123",
-    "jobTitle": "Frontend Developer",
-    "companyId": "j-labs",
-    "jobBoard": "LinkedIn",
-    "jobBoardUrl": "https://linkedin.com/job/1",
-    "employmentType": "Full-time",
-    "workType": "Remote",
-    "postedDate": "2025-12-18",
-    "appliedDate": "2025-12-19",
-    "status": "Applied",
-    "logoUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4RQvdJVCcxg32I_90Lr3lwtYjUozfEDW3pA&s",
-    "priority": "High",
-    "salary": { "expected": 5000, "offered": 4800 }
-  },
-  {
-    "id": "2",
-    "userId": "123",
-    "jobTitle": "Backend Developer",
-    "companyId": "DevSolutions",
-    "jobBoard": "Indeed",
-    "jobBoardUrl": "https://indeed.com/job/2",
-    "employmentType": "Contract",
-    "workType": "On-site",
-    "postedDate": "2025-12-17",
-    "appliedDate": "2025-12-18",
-    "status": "HR Interview",
-    "logoUrl": "https://media.licdn.com/dms/image/v2/D4D0BAQH_0Jz-GO78KQ/company-logo_200_200/company-logo_200_200/0/1684397514671/devsolutionsio_logo?e=2147483647&v=beta&t=nVe0o-y83mSGLlUbc-TIGPMm03g9fPfGQetRr51LqFQ",
-    "priority": "Medium",
-    "salary": { "expected": 6000, "offered": 6000 }
+    "id": 1,
+    "companyName": "J-Labs",
+    "companyImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4RQvdJVCcxg32I_90Lr3lwtYjUozfEDW3pA&s",
+    "position": "Frontend Developer",
+    "description": "We are looking for a Frontend Developer to build modern web applications using React and TypeScript.",
+    "jobType": "Remote",
+    "agreementType": "B2B",
+    "salary": "18 000 – 22 000 PLN",
+    "publishDate": "2025-03-10",
+    "linkToTheOffer": "https://linkedin.com/jobs/view/123456",
+    "status": "APPLIED"
   }
 ]
