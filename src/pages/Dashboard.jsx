@@ -57,13 +57,14 @@ export default function Dashboard() {
         );
     };
 
-    function SortableOffer({ offer }) {
+    function SortableOffer({ offer, activeId }) {
         const { attributes, listeners, setNodeRef, transform, transition } =
             useSortable({ id: offer.id });
 
         const style = {
             transform: CSS.Transform.toString(transform),
             transition,
+            opacity: activeId === offer.id ? 0.5 : 1, // <-- półprzezroczysty gdy przeciągany
         };
 
         return (
@@ -127,7 +128,7 @@ export default function Dashboard() {
                                         strategy={verticalListSortingStrategy}
                                     >
                                         {offersInStatus.map(offer => (
-                                            <SortableOffer key={offer.id} offer={offer} />
+                                            <SortableOffer key={offer.id} offer={offer} activeId={activeId} />
                                         ))}
                                     </SortableContext>
                                 </StatusColumn>
