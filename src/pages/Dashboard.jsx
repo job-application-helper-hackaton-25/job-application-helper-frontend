@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {getOffers, getOffersStatuses} from "../api/offersApi-real.js";
+import React, { useState, useEffect } from "react";
+import { getOffers, getOffersStatuses, updateOfferStatuses } from "../api/offersApi-real.js";
 import OfferCard from "../components/OfferCard";
 import OfferDetails from "../components/OfferDetails";
 import Header from "../components/Header";
@@ -10,34 +10,56 @@ import {
     useSensor,
     useSensors,
     closestCenter,
+    useDroppable,
+    DragOverlay,
 } from "@dnd-kit/core";
 import {
     SortableContext,
-    arrayMove,
-    horizontalListSortingStrategy,
+    verticalListSortingStrategy,
     useSortable,
 } from "@dnd-kit/sortable";
-import {CSS} from "@dnd-kit/utilities";
+import { CSS } from "@dnd-kit/utilities";
 import { NOTE_STAGE_COLORS } from "../constants/StageColors.jsx";
 
-// const STATUS_COLUMNS = [
-//     "SAVED",
-//     "APPLIED",
-//     "HR INTERVIEW",
-//     "TECHNICAL INTERVIEW",
-//     "OFFER",
-//     "DECISION",
-// ];
-
 export default function Dashboard() {
-    const userId = "123";
     const [offers, setOffers] = useState([]);
     const [offersStatuses, setOffersStatuses] = useState([]);
     const [selectedOffer, setSelectedOffer] = useState(null);
+    const [activeId, setActiveId] = useState(null);
 
-    function SortableOffer({offer}) {
-        const {attributes, listeners, setNodeRef, transform, transition} =
-            useSortable({id: offer.id});
+    useEffect(() => {
+        getOffers().then(setOffers);
+        getOffersStatuses().then(setOffersStatuses);
+    }, []);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+    );
+
+    const onDragStart = ({ active }) => setActiveId(active.id);
+
+    const onDragEnd = ({ active, over }) => {
+        setActiveId(null);
+        if (!over) return;
+
+        const offerId = active.id;
+        const newStatus = over.data.current?.status;
+        if (!newStatus) return;
+
+        setOffers(prev =>
+            prev.map(o =>
+                o.id === offerId ? { ...o, status: newStatus } : o
+            )
+        );
+
+        updateOfferStatuses(offerId, newStatus).catch(err =>
+            console.error("Failed to update offer status", err)
+        );
+    };
+
+    function SortableOffer({ offer }) {
+        const { attributes, listeners, setNodeRef, transform, transition } =
+            useSortable({ id: offer.id });
 
         const style = {
             transform: CSS.Transform.toString(transform),
@@ -51,80 +73,86 @@ export default function Dashboard() {
                 {...attributes}
                 {...listeners}
                 className="bg-white p-4 rounded-lg shadow cursor-pointer flex items-center justify-center h-32 text-gray-900 mb-2"
-                onClick={() => {
-                    setSelectedOffer(offer);
-                }}>
-                <OfferCard offer={offer}/>
+                onClick={() => setSelectedOffer(offer)}
+            >
+                <OfferCard offer={offer} />
             </div>
         );
     }
 
-    useEffect(() => {
-        getOffers().then(setOffers);
-        getOffersStatuses().then(setOffersStatuses);
-    }, []);
+    function StatusColumn({ status, children }) {
+        const { setNodeRef } = useDroppable({
+            id: status.value,
+            data: { status: status.value },
+        });
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, {activationConstraint: {distance: 15}})
-    );
-
-    const onDragEnd = (event) => {
-        const {active, over} = event;
-        if (!over) return;
-
-        if (active.id !== over.id) {
-            setOffers((prev) => {
-                const oldIndex = prev.findIndex((o) => o.id === active.id);
-                const newIndex = prev.findIndex((o) => o.id === over.id);
-                return arrayMove(prev, oldIndex, newIndex);
-            });
-        }
-    };
+        return (
+            <div
+                ref={setNodeRef}
+                className="flex flex-col gap-2 m-2 bg-gray-100 p-2 rounded-lg"
+            >
+                {children}
+            </div>
+        );
+    }
 
     return (
         <div className="h-screen w-screen flex flex-col">
-            <Header/>
+            <Header />
 
-            <div className="flex-1 overflow-x-auto p-4 flex gap-4">
-                {offersStatuses.map((status) => (
-                    <div
-                        key={status.value}
-                        className={`flex-shrink-0 flex-1 bg-gray-100 shadow rounded-lg flex flex-col h-full`}>
-                        <h2 className={`text-lg text-gray-700 font-semibold mb-2 py-1 rounded-t-lg border-t-5 ${NOTE_STAGE_COLORS[status.value].border}`}>
-                            {status.label}
-                        </h2>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={onDragEnd}
+                onDragStart={onDragStart}
+            >
+                <div className="flex-1 overflow-x-auto p-4 flex gap-4">
+                    {offersStatuses.map(status => {
+                        const offersInStatus = offers.filter(o => o.status === status.value);
 
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={onDragEnd}
-                        >
-                            <SortableContext
-                                items={offers.filter((o) => o.status === status.value).map((o) => o.id)}
-                                strategy={horizontalListSortingStrategy}
+                        return (
+                            <div
+                                key={status.value}
+                                className="flex-shrink-0 flex-1 bg-gray-100 shadow rounded-lg flex flex-col h-full"
                             >
-                                <div className="flex flex-col gap-2 m-2">
-                                    {offers
-                                        .filter((o) => o.status === status.value)
-                                        .map((offer) => (
-                                            <SortableOffer
-                                                key={offer.id}
-                                                offer={offer}
-                                            />
+                                <h2
+                                    className={`text-lg text-gray-700 font-semibold mb-2 py-1 rounded-t-lg border-t-5 ${NOTE_STAGE_COLORS[status.value].border}`}
+                                >
+                                    {status.label}
+                                </h2>
+
+                                <StatusColumn status={status}>
+                                    <SortableContext
+                                        items={offersInStatus.map(o => o.id)}
+                                        strategy={verticalListSortingStrategy}
+                                    >
+                                        {offersInStatus.map(offer => (
+                                            <SortableOffer key={offer.id} offer={offer} />
                                         ))}
-                                </div>
-                            </SortableContext>
-                        </DndContext>
-                    </div>
-                ))}
-            </div>
+                                    </SortableContext>
+                                </StatusColumn>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <DragOverlay>
+                    {activeId ? (() => {
+                        const offer = offers.find(o => o.id === activeId);
+                        if (!offer) return null;
+                        return (
+                            <div className="bg-white p-4 rounded-lg shadow cursor-pointer flex items-center justify-center h-32 text-gray-900 mb-2">
+                                <OfferCard offer={offer} />
+                            </div>
+                        );
+                    })() : null}
+                </DragOverlay>
+            </DndContext>
 
             {selectedOffer && (
                 <OfferDetails
                     offer={selectedOffer}
-                    onClose={() => {
-                        setSelectedOffer(null)
-                    }}
+                    onClose={() => setSelectedOffer(null)}
                 />
             )}
         </div>

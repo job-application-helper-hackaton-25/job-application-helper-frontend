@@ -4,15 +4,18 @@ const API_BASE = "http://0.0.0.0:8080/offers";
 
 export const getOffers = () =>
     axios.get(`${API_BASE}`).then(res => {
-        console.log(res.data);
         return res.data;
     });
 
 export const getOffersStatuses = () =>
     axios.get(`${API_BASE}/statuses`).then(res => {
-        console.log(res.data);
         return res.data;
     });
+
+export const updateOfferStatuses = (offerId, status) =>
+    axios.patch(`${API_BASE}/${offerId}`,  {
+        status: status
+    }).then(res => res.data);
 
 export const getOfferDetails = (userId, offerId) =>
     axios.get(`${API_BASE}/${userId}/offers/${offerId}`).then(res => res.data);
