@@ -17,28 +17,24 @@ const NOTES_BY_OFFER = {
     "2": notesOffer2,
 };
 
-export const getOffers = (userId) =>
-    new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(offers.filter(o => o.userId === userId));
-        }, 1);
-    });
+export const getOffers = (userId) => new Promise((resolve) => {
+    setTimeout(() => {
+        resolve(offers.filter(o => o.userId === userId));
+    }, 1);
+});
 
-export const getOfferStatuses = (userId, offerId) =>
-    axios.get(`${API_BASE}/${userId}/offers/${offerId}/statuses`).then(res => res.data);
+export const getOfferStatuses = (userId, offerId) => axios.get(`${API_BASE}/${userId}/offers/${offerId}/statuses`).then(res => res.data);
 
-export const getOfferNotes = (userId, offerId) =>
-    new Promise((resolve) => {
-        setTimeout(() => {
-            const notes = NOTES_BY_OFFER[offerId] || [];
-            resolve(notes.filter(t => t.userId === userId));
-        }, 1);
-    });
+export const getOfferNotes = (userId, offerId) => new Promise((resolve) => {
+    setTimeout(() => {
+        const notes = NOTES_BY_OFFER[offerId] || [];
+        resolve(notes.filter(t => t.userId === userId));
+    }, 1);
+});
 
-export const getOfferTodos = (userId, offerId) =>
-    new Promise((resolve) => {
-        setTimeout(() => {
-            const todos = TODOS_BY_OFFER[offerId] || [];
-            resolve(todos.filter(t => t.userId === userId));
-        }, 1);
-    });
+export const getOfferTodos = (userId, offerId) => new Promise((resolve) => {
+    setTimeout(() => {
+        const todos = TODOS_BY_OFFER[offerId] || [];
+        resolve(todos.filter(t => t.userId === userId));
+    }, 1);
+});
