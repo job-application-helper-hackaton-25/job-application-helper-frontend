@@ -127,7 +127,7 @@ export default function OfferDetails({userId, offer, onClose}) {
                     <div className="grid md:grid-cols-2 gap-4">
                         <section className="bg-gray-100 p-4 rounded-xl shadow-inner flex flex-col">
                             <h3 className="font-semibold mb-2">Notes</h3>
-                            <div className="overflow-y-auto max-h-[50vh] scrollbar-thin pr-2 flex flex-col gap-2">
+                            <div className="overflow-y-auto max-h-[45vh] scrollbar-thin pr-2 flex flex-col gap-2">
                                 <NewNoteInput
                                     offerStatus={offer.status}
                                     onAdd={(newContent) => {
@@ -150,7 +150,7 @@ export default function OfferDetails({userId, offer, onClose}) {
 
                         <section className="bg-gray-100 p-4 rounded-xl shadow-inner flex flex-col">
                             <h3 className="font-semibold mb-2">Todos</h3>
-                            <div className="overflow-y-auto max-h-[50vh] scrollbar-thin pr-2">
+                            <div className="overflow-y-auto max-h-[45vh] scrollbar-thin pr-2">
                                 <NewTodoItem onAdd={handleAddTodo}/>
 
                                 {todos.length ? todos.map(t => <TodoItem key={t.id} todo={t}/>) :
