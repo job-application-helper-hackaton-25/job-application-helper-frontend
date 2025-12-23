@@ -57,7 +57,6 @@ export default function Expandable({ description, maxLines = 3 }) {
                         className="relative bg-white p-6 rounded-2xl max-w-3xl max-h-[80vh] w-full"
                         onClick={e => e.stopPropagation()}
                     >
-                        {/* Przycisk w prawym górnym rogu – absolutnie względem rodzica */}
                         <button
                             onClick={() => setShowPopup(false)}
                             className="absolute top-4 right-4 text-red-500 font-bold hover:text-red-700 transition-colors z-10"
@@ -65,7 +64,6 @@ export default function Expandable({ description, maxLines = 3 }) {
                             ✕
                         </button>
 
-                        {/* Scrollowalna treść */}
                         <div className="overflow-y-auto max-h-[75vh] pr-2">
                             <p className="text-gray-800 whitespace-pre-line">{description}</p>
                         </div>
