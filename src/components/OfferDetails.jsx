@@ -8,7 +8,7 @@ import NewTodoItem from "./NewTodoItem.jsx";
 import Expandable from "../scripts/Expandable.jsx";
 import {getOffersStatuses, deleteOffer} from "../api/offersApi-real.js";
 import {createOfferNote, deleteOfferNote, getOfferNotes} from "../api/notesApi.js";
-import {createOfferTodo, getOfferTodos} from "../api/todosApi.js";
+import {createOfferTodo, deleteOfferTodo, getOfferTodos} from "../api/todosApi.js";
 import ConfirmDeleteModal from "./ConfirmDeleteModal.jsx";
 
 export default function OfferDetails({userId, offer, onClose, onDeleted}) {
@@ -93,6 +93,16 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
         } catch (err) {
             console.error("Failed to delete note", err);
             alert("Could not delete note");
+        }
+    };
+
+    const handleDeleteTodo = async (todoId) => {
+        try {
+            await deleteOfferTodo(offer.id, todoId);
+            setTodos(prev => prev.filter(n => n.id !== todoId));
+        } catch (err) {
+            console.error("Failed to delete todo", err);
+            alert("Could not delete todo");
         }
     };
 
@@ -238,7 +248,10 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
                                             if (dateA - dateB !== 0) return dateA - dateB;
                                             return (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0);
                                         })
-                                        .map(t => <TodoItem key={t.id} todo={t} />)
+                                        .map(t => <TodoItem key={t.id}
+                                                            todo={t}
+                                                            onDelete={() => handleDeleteTodo(t.id)}
+                                        />)
                                     : (
                                         <p className="text-gray-400">No todos yet</p>
                                     )}

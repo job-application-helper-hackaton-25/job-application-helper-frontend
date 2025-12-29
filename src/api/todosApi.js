@@ -7,6 +7,11 @@ export const getOfferTodos = (offerId) =>
         return res.data;
     });
 
+export const deleteOfferTodo = (offerId, todoId) =>
+    axios.delete(`${API_BASE}/${offerId}/todos/${todoId}`).then(res => {
+        return res.data;
+    });
+
 export const createOfferTodo = (offerId, todo) =>
     axios.post(`${API_BASE}/${offerId}/todos`, {
         userId: todo.userId,
