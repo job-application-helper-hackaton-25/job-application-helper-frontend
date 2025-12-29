@@ -7,6 +7,11 @@ export const getOfferNotes = (offerId) =>
         return res.data;
     });
 
+export const deleteOfferNote = (offerId, noteId) =>
+    axios.delete(`${API_BASE}/${offerId}/notes/${noteId}`).then(res => {
+        return res.data;
+    });
+
 export const createOfferNote = (offerId, note) =>
     axios.post(`${API_BASE}/${offerId}/notes`, {
         userId: note.userId,

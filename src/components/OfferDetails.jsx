@@ -7,7 +7,7 @@ import NewNoteInput from "./NewNoteInput.jsx";
 import NewTodoItem from "./NewTodoItem.jsx";
 import Expandable from "../scripts/Expandable.jsx";
 import {getOffersStatuses, deleteOffer} from "../api/offersApi-real.js";
-import {createOfferNote, getOfferNotes} from "../api/notesApi.js";
+import {createOfferNote, deleteOfferNote, getOfferNotes} from "../api/notesApi.js";
 import {createOfferTodo, getOfferTodos} from "../api/todosApi.js";
 import ConfirmDeleteModal from "./ConfirmDeleteModal.jsx";
 
@@ -16,6 +16,8 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
     const [notes, setNotes] = useState([]);
     const [todos, setTodos] = useState([]);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+    const priorityOrder = { HIGH: 3, MEDIUM: 2, LOW: 1 };
 
     useEffect(() => {
         if (!offer) return;
@@ -81,6 +83,16 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
         } catch (err) {
             console.error("Failed to create note", err);
             alert("Could not save note");
+        }
+    };
+
+    const handleDeleteNote = async (noteId) => {
+        try {
+            await deleteOfferNote(offer.id, noteId);
+            setNotes(prev => prev.filter(n => n.id !== noteId));
+        } catch (err) {
+            console.error("Failed to delete note", err);
+            alert("Could not delete note");
         }
     };
 
@@ -199,8 +211,12 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
 
                                 {notes.length ? (
                                     [...notes]
-                                        .sort((a, b) => new Date(b.date) - new Date(a.date)) // sort malejąco po dacie
-                                        .map(n => <NoteItem key={n.id} note={n} statuses={statuses}/>)
+                                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                                        .map(n => <NoteItem key={n.id}
+                                                            note={n}
+                                                            statuses={statuses}
+                                                            onDelete={() => handleDeleteNote(n.id)}
+                                        />)
                                 ) : (
                                     <p className="text-gray-400">No notes yet</p>
                                 )}
@@ -212,8 +228,20 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
                             <div className="overflow-y-auto max-h-[45vh] scrollbar-thin pr-2">
                                 <NewTodoItem onAdd={handleAddTodo}/>
 
-                                {todos.length ? todos.map(t => <TodoItem key={t.id} todo={t}/>) :
-                                    <p className="text-gray-400">No todos yet</p>}
+                                {todos.length ?
+                                    todos
+                                        .slice()
+                                        .sort((a, b) => {
+                                            const dateA = a.deadline ? new Date(a.deadline) : new Date(0);
+                                            const dateB = b.deadline ? new Date(b.deadline) : new Date(0);
+
+                                            if (dateA - dateB !== 0) return dateA - dateB;
+                                            return (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0);
+                                        })
+                                        .map(t => <TodoItem key={t.id} todo={t} />)
+                                    : (
+                                        <p className="text-gray-400">No todos yet</p>
+                                    )}
                             </div>
                         </section>
                     </div>
