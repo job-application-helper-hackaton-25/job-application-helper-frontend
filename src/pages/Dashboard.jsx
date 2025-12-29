@@ -36,6 +36,10 @@ export default function Dashboard() {
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
     );
 
+    const handleOfferDeleted = (deletedOfferId) => {
+        setOffers(prev => prev.filter(o => o.id !== deletedOfferId));
+    };
+
     const onDragStart = ({ active }) => setActiveId(active.id);
 
     const onDragEnd = ({ active, over }) => {
@@ -154,6 +158,7 @@ export default function Dashboard() {
                 <OfferDetails
                     offer={selectedOffer}
                     onClose={() => setSelectedOffer(null)}
+                    onDeleted={handleOfferDeleted}
                 />
             )}
         </div>

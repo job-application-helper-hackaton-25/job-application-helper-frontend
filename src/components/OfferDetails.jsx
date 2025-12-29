@@ -7,12 +7,14 @@ import {NOTE_STAGE_COLORS} from "../constants/StageColors.jsx";
 import NewNoteInput from "./NewNoteInput.jsx";
 import NewTodoItem from "./NewTodoItem.jsx";
 import Expandable from "../scripts/Expandable.jsx";
-import {getOffersStatuses} from "../api/offersApi-real.js";
+import {getOffersStatuses, deleteOffer, getOffers} from "../api/offersApi-real.js";
+import ConfirmDeleteModal from "./ConfirmDeleteModal.jsx";
 
-export default function OfferDetails({userId, offer, onClose}) {
+export default function OfferDetails({userId, offer, onClose, onDeleted}) {
     const [statuses, setStatuses] = useState([]);
     const [notes, setNotes] = useState([]);
     const [todos, setTodos] = useState([]);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     useEffect(() => {
         if (!offer) return;
@@ -27,6 +29,17 @@ export default function OfferDetails({userId, offer, onClose}) {
     };
 
     if (!offer) return null;
+
+    const handleDeleteOffer = async () => {
+        try {
+            await deleteOffer(offer.id);
+            onDeleted(offer.id);
+            onClose();
+        } catch (e) {
+            console.error(e);
+            alert("Failed to delete offer");
+        }
+    };
 
     function getStatusProgress(status) {
         const index = statuses.findIndex(s => s.value === status);
@@ -70,12 +83,21 @@ export default function OfferDetails({userId, offer, onClose}) {
 
 
                 <div className="p-6">
-                    <button
-                        onClick={onClose}
-                        className="absolute top-4 right-4 text-red-500 font-bold hover:text-red-700 transition-colors"
-                    >
-                        ✕
-                    </button>
+                    <div className="absolute top-4 right-4 flex gap-2 mt-3">
+                        <button
+                            onClick={() => setShowDeleteConfirm(true)}
+                            className="text-sm px-3 py-1 rounded-lg bg-red-100 text-red-700 font-semibold hover:bg-red-200 transition"
+                        >
+                            Delete
+                        </button>
+
+                        <button
+                            onClick={onClose}
+                            className="text-red-500 font-bold hover:text-red-700 transition-colors"
+                        >
+                            ✕
+                        </button>
+                    </div>
 
                     <div className="flex items-center justify-center gap-4 mb-4">
                         {offer.companyImage && (<img
@@ -161,5 +183,12 @@ export default function OfferDetails({userId, offer, onClose}) {
                 </div>
             </motion.div>
         </motion.div>
+        <ConfirmDeleteModal
+            open={showDeleteConfirm}
+            title="Delete offer"
+            description={`Are you sure you want to delete "${offer.position}" at ${offer.companyName}? This action cannot be undone.`}
+            onCancel={() => setShowDeleteConfirm(false)}
+            onConfirm={handleDeleteOffer}
+        />
     </AnimatePresence>);
 }

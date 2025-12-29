@@ -7,6 +7,11 @@ export const getOffers = () =>
         return res.data;
     });
 
+export const deleteOffer = (offerId) =>
+    axios.delete(`${API_BASE}/${offerId}`).then(res => {
+        return res.data;
+    });
+
 export const getOffersStatuses = () =>
     axios.get(`${API_BASE}/statuses`).then(res => {
         return res.data;
