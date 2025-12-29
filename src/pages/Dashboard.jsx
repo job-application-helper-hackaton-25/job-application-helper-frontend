@@ -156,6 +156,7 @@ export default function Dashboard() {
 
             {selectedOffer && (
                 <OfferDetails
+                    userId="mocked-user-123"
                     offer={selectedOffer}
                     onClose={() => setSelectedOffer(null)}
                     onDeleted={handleOfferDeleted}

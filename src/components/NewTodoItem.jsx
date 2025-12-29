@@ -10,9 +10,6 @@ export default function NewTodoItem({ onAdd }) {
         if (!content.trim()) return;
 
         const newTodo = {
-            id: `todo-${Date.now()}`,
-            userId: "123",
-            offerId: "1",
             content,
             deadline: deadline || null,
             priority,

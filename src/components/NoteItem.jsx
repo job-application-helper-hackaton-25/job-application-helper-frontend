@@ -11,7 +11,13 @@ export default function NoteItem({ note, statuses }) {
             <p className="text-sm text-gray-700 mb-1">{note.content}</p>
             <div className="flex justify-between text-xs text-gray-500">
                 <span>{statuses.find(s => s.value === note.stage)?.label}</span>
-                <span>{note.date}</span>
+                <span>{new Date(note.date).toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                })}</span>
             </div>
         </div>
     );

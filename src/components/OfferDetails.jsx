@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {getOfferNotes, getOfferTodos} from "../api/offersApi.js";
 import TodoItem from "./TodoItem";
 import {motion, AnimatePresence} from "framer-motion";
 import NoteItem from "./NoteItem.jsx";
@@ -7,7 +6,9 @@ import {NOTE_STAGE_COLORS} from "../constants/StageColors.jsx";
 import NewNoteInput from "./NewNoteInput.jsx";
 import NewTodoItem from "./NewTodoItem.jsx";
 import Expandable from "../scripts/Expandable.jsx";
-import {getOffersStatuses, deleteOffer, getOffers} from "../api/offersApi-real.js";
+import {getOffersStatuses, deleteOffer} from "../api/offersApi-real.js";
+import {createOfferNote, getOfferNotes} from "../api/notesApi.js";
+import {createOfferTodo, getOfferTodos} from "../api/todosApi.js";
 import ConfirmDeleteModal from "./ConfirmDeleteModal.jsx";
 
 export default function OfferDetails({userId, offer, onClose, onDeleted}) {
@@ -20,13 +21,9 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
         if (!offer) return;
 
         getOffersStatuses(userId, offer.id).then(setStatuses);
-        getOfferNotes(userId, offer.id).then(setNotes);
-        getOfferTodos(userId, offer.id).then(setTodos);
+        getOfferNotes(offer.id).then(setNotes);
+        getOfferTodos(offer.id).then(setTodos);
     }, [userId, offer]);
-
-    const handleAddTodo = (newTodo) => {
-        setTodos((prevTodos) => [newTodo, ...prevTodos]);
-    };
 
     if (!offer) return null;
 
@@ -38,6 +35,52 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
         } catch (e) {
             console.error(e);
             alert("Failed to delete offer");
+        }
+    };
+
+    const handleAddTodo = async (newTodo) => {
+        try {
+            const todoToSave = {
+                userId,
+                offerId: offer.id,
+                completed: false,
+                ...newTodo
+            };
+
+            const id = await createOfferTodo(offer.id, todoToSave);
+
+            const fullTodo = {
+                id,
+                ...todoToSave
+            };
+
+            setTodos(prev => [fullTodo, ...prev]);
+        } catch (err) {
+            console.error("Failed to create todo", err);
+            alert("Could not save todo");
+        }
+    };
+
+    const handleAddNote = async (content) => {
+        try {
+            const noteToSave = {
+                stage: offer.status,
+                content: content,
+                userId: userId,
+                offerId: offer.id,
+                date: new Date().toISOString(),
+            };
+
+            const id = await createOfferNote(offer.id, noteToSave);
+            const fullNote = {
+                id,
+                ...noteToSave,
+            };
+
+            setNotes(prev => [fullNote, ...prev]);
+        } catch (err) {
+            console.error("Failed to create note", err);
+            alert("Could not save note");
         }
     };
 
@@ -80,7 +123,6 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
                         </div>
                     </div>
                 </div>
-
 
                 <div className="p-6">
                     <div className="absolute top-4 right-4 flex gap-2 mt-3">
@@ -152,21 +194,16 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
                             <div className="overflow-y-auto max-h-[45vh] scrollbar-thin pr-2 flex flex-col gap-2">
                                 <NewNoteInput
                                     offerStatus={offer.status}
-                                    onAdd={(newContent) => {
-                                        const newNote = {
-                                            id: `note-${Date.now()}`,
-                                            userId,
-                                            offerId: offer.id,
-                                            stage: offer.status,
-                                            content: newContent,
-                                            date: new Date().toISOString().split("T")[0],
-                                        };
-                                        setNotes([newNote, ...notes]);
-                                    }}
+                                    onAdd={handleAddNote}
                                 />
 
-                                {notes.length ? (notes.map(n => <NoteItem key={n.id} note={n} statuses={statuses}/>)) : (
-                                    <p className="text-gray-400">No notes yet</p>)}
+                                {notes.length ? (
+                                    [...notes]
+                                        .sort((a, b) => new Date(b.date) - new Date(a.date)) // sort malejąco po dacie
+                                        .map(n => <NoteItem key={n.id} note={n} statuses={statuses}/>)
+                                ) : (
+                                    <p className="text-gray-400">No notes yet</p>
+                                )}
                             </div>
                         </section>
 

@@ -5,7 +5,6 @@ export default function NewNoteInput({ offerStatus, onAdd }) {
     const [content, setContent] = useState("");
     const textareaRef = useRef(null);
 
-    // autosize textarea
     useEffect(() => {
         if (textareaRef.current) {
             textareaRef.current.style.height = "auto";
