@@ -21,3 +21,12 @@ export const createOfferTodo = (offerId, todo) =>
         priority: todo.priority,
         completed: todo.completed,
     }).then(res => res.data);
+
+export const updateOfferTodo = (offerId, todoId, data) =>
+    axios.patch(`${API_BASE}/${offerId}/todos/${todoId}`,  data,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(res => res.data);

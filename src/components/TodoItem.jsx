@@ -2,7 +2,8 @@ import React from "react";
 import clsx from "clsx";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-export default function TodoItem({ todo, onDelete }) {
+export default function TodoItem({ todo, onDelete, onToggleCompleted }) {
+
     const isOverdue =
         todo.deadline != null && !todo.completed && new Date(todo.deadline) < new Date();
 
@@ -23,6 +24,7 @@ export default function TodoItem({ todo, onDelete }) {
             <input
                 type="checkbox"
                 checked={todo.completed}
+                onChange={() => onToggleCompleted(todo.id)}
                 readOnly
                 className="h-5 w-5 mt-1"
                 style={{ colorScheme: "light" }}

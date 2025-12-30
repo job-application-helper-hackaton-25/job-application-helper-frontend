@@ -8,7 +8,7 @@ import NewTodoItem from "./NewTodoItem.jsx";
 import Expandable from "../scripts/Expandable.jsx";
 import {getOffersStatuses, deleteOffer} from "../api/offersApi-real.js";
 import {createOfferNote, deleteOfferNote, getOfferNotes} from "../api/notesApi.js";
-import {createOfferTodo, deleteOfferTodo, getOfferTodos} from "../api/todosApi.js";
+import {createOfferTodo, deleteOfferTodo, getOfferTodos, updateOfferTodo} from "../api/todosApi.js";
 import ConfirmDeleteModal from "./ConfirmDeleteModal.jsx";
 
 export default function OfferDetails({userId, offer, onClose, onDeleted}) {
@@ -44,7 +44,7 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
         try {
             const todoToSave = {
                 userId,
-                offerId: offer.id,
+                offerId: String(offer.id),
                 completed: false,
                 ...newTodo
             };
@@ -69,7 +69,7 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
                 stage: offer.status,
                 content: content,
                 userId: userId,
-                offerId: offer.id,
+                offerId: String(offer.id),
                 date: new Date().toISOString(),
             };
 
@@ -78,7 +78,6 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
                 id,
                 ...noteToSave,
             };
-
             setNotes(prev => [fullNote, ...prev]);
         } catch (err) {
             console.error("Failed to create note", err);
@@ -103,6 +102,25 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
         } catch (err) {
             console.error("Failed to delete todo", err);
             alert("Could not delete todo");
+        }
+    };
+
+    const handleToggleCompleted = async (todoId) => {
+        const todo = todos.find(t => t.id === todoId);
+        if (!todo) return;
+
+        const newCompleted = !todo.completed;
+
+        try {
+            await updateOfferTodo(offer.id, todoId, newCompleted);
+
+            setTodos(prev =>
+                prev.map(t =>
+                    t.id === todoId ? { ...t, completed: newCompleted } : t
+                )
+            );
+        } catch (err) {
+            console.error("Failed to update todo", err);
         }
     };
 
@@ -171,7 +189,7 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
                         />)}
 
                         <div>
-                            <h2 className="text-2xl font-bold">
+                            <h2 className="text-2xl font-bold mt-5">
                                 {offer.position} @ {offer.companyName}
                             </h2>
 
@@ -242,14 +260,22 @@ export default function OfferDetails({userId, offer, onClose, onDeleted}) {
                                     todos
                                         .slice()
                                         .sort((a, b) => {
+                                            if (a.completed !== b.completed) {
+                                                return a.completed ? 1 : -1;
+                                            }
+
                                             const dateA = a.deadline ? new Date(a.deadline) : new Date(0);
                                             const dateB = b.deadline ? new Date(b.deadline) : new Date(0);
 
-                                            if (dateA - dateB !== 0) return dateA - dateB;
+                                            if (dateA.getTime() !== dateB.getTime()) {
+                                                return dateA.getTime() - dateB.getTime();
+                                            }
+
                                             return (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0);
                                         })
                                         .map(t => <TodoItem key={t.id}
                                                             todo={t}
+                                                            onToggleCompleted={handleToggleCompleted}
                                                             onDelete={() => handleDeleteTodo(t.id)}
                                         />)
                                     : (

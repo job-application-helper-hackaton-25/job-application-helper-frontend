@@ -9,7 +9,9 @@ export default function OfferCard({ offer }) {
 
             <div className="flex flex-col text-left">
                 <div className="text-sm font-semibold text-gray-900">
-                    {offer.position}
+                    {offer.position.length > 15
+                        ? offer.position.slice(0, 15) + "…"
+                        : offer.position}
                 </div>
 
                 <div className="text-xs text-gray-600">
@@ -17,7 +19,11 @@ export default function OfferCard({ offer }) {
                 </div>
 
                 <div className="text-xs text-gray-400">
-                    {offer.jobType} • {offer.agreementType}
+                    {offer.jobType.length > 10
+                        ? offer.jobType.slice(0, 10) + "…"
+                        : offer.jobType} • {offer.agreementType.length > 10
+                    ? offer.agreementType.slice(0, 10) + "…"
+                    : offer.agreementType}
                 </div>
             </div>
         </div>
